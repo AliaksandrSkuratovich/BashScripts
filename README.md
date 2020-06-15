@@ -20,11 +20,9 @@ To install and run the script, download the file or repository, then execute the
     `vim .bash_profile`
 
 you will open the vim code editor, in which you need to write
-
     `alias "command"="Path/to/./c229.sh"`
 
 then you have write the changes.
-
     `chmod + x "Path / to /./ c229.sh"`
 
 this command enables you to execute the script
