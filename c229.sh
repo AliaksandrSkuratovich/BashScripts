@@ -1,10 +1,6 @@
 #! /bin/bash
 
 
-# 2) довавить возможность рекомпилировать последний скомпилированный файл +
-# 3) добавить возможность запускать редакцию файла +
-# 3.1 разбросать по функциям +
-# свитч между маком и линухом
 # 4) добавить возможность автозаполнения строки при вводе названия файла, который хотим скомпилировать
 #
 
@@ -72,6 +68,9 @@ e_blue()
     e_normal
 }
 
+
+
+
 function terminal_mac_linux_c() {
     OS="`uname`"
     case $OS in
@@ -122,15 +121,18 @@ function ask_user_c() {
         e_cyan "What do you want to do next? "
         echo
         e_white "1 Recompile and open file "
+        echo
         e_white "2 Change file and recompile "
+        echo
         e_white "3 Go to the main menu "
+        echo
         read input
 
 
-        if [[ $input -eq 1 ]]; then # Recompile file
+        if [[ $input -eq 1 ]]; then
             compile_mv_rmOld_run_c
 
-        else if [[ $input -eq 2 ]]; then #Edit file and recompile
+        else if [[ $input -eq 2 ]]; then
             terminal_mac_linux_c edit
             e_cyan "Compiling starts after you enter anything... "
             read anything
@@ -282,8 +284,11 @@ function ask_user_cpp() {
         e_cyan "What do you want to do next? "
         echo
         e_white "1 Recompile and open file "
+        echo
         e_white "2 Change file and recompile "
+        echo
         e_white "3 Go to the main menu "
+        echo
         read input
 
 
