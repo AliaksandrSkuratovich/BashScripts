@@ -1,6 +1,12 @@
 #! /bin/bash
 
 
+# 2) довавить возможность рекомпилировать последний скомпилированный файл +
+# 3) добавить возможность запускать редакцию файла +
+# 3.1 разбросать по функциям +
+# свитч между маком и линухом
+# 4) добавить возможность автозаполнения строки при вводе названия файла, который хотим скомпилировать
+#
 
 e_normal() {
   NC='\033[0m'
@@ -18,72 +24,163 @@ e_normal
 }
 e_green() {
   green='\033[0;32m'
-  printf "${green}$1\n"
+  printf "${green}$1"
   e_normal
 }
 
+function terminal_mac_linux() {
+    OS="`uname`"
+    case $OS in
+      'Linux')
+        case $1 in
+            "compile" )
+                xterm -hold -e CompiledC/$nameOfCompiledFile
+            ;;
+            "edit" )
+                xterm -hold -e vim $cfileName
+            ;;
+            * )
+                e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
+        esac
 
-function runFile( ) {
+        ;;
+      'Darwin')
+        case $1 in
+            "compile" )
+                open -a Terminal CompiledC/$nameOfCompiledFile
+            ;;
+            "edit" )
+                vi $cfileName
+            ;;
+            * )
+                e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
+        esac
+        ;;
+      *) ;;
+    esac
+}
+
+
+function compile_mv_rmOld_run() {
+    gcc -Wall -o $nameOfCompiledFile $cfileName
+    rm CompiledC/$nameOfCompiledFile
+    mv ~/Desktop/CLang/$nameOfCompiledFile ~/Desktop/CLang/CompiledC/$nameOfCompiledFile
+    terminal_mac_linux compile
+}
+# asks user after run_file if user wants to recompile or change the files in vim and recomplile
+
+
+
+function ask_user() {
+    switcher=0
+    while [[ $switcher < 1 ]]; do
+        echo ""
+        e_normal "What do you want to do next? "
+        echo ""
+        e_white "1 Recompile and open file "
+        e_white "2 Change file and recompile "
+        e_white "3 Go to the main menu "
+        read input
+
+
+        if [[ $input -eq 1 ]]; then # Recompile file
+            compile_mv_rmOld_run
+
+        else if [[ $input -eq 2 ]]; then #Edit file and recompile
+            terminal_mac_linux edit
+            e_green "Compiling starts after you enter anything... "
+            read anything
+
+            compile_mv_rmOld_run compile
+
+        else if [[ $input -eq 3 ]]; then
+            switcher=1
+
+            mainmenu
+        fi
+        fi
+        fi
+    done
+}
+
+function run_file() {
+    gcc -Wall -o $nameOfCompiledFile $cfileName
+
     if [[ -e $nameOfCompiledFile ]]; then
         rm CompiledC/$nameOfCompiledFile
         mv ~/Desktop/CLang/$nameOfCompiledFile ~/Desktop/CLang/CompiledC/$nameOfCompiledFile
         e_white "Do you want to open the file?"
         e_white "[y/n]"
-        read input
-        case $input in
-            "y" | "Y")
-            open -a Terminal ~/Desktop/CLang/CompiledC/$nameOfCompiledFile
-            ;;
-        *)
-          ./ch.sh
-          ;;
-        esac
-    echo -e "\n"
-    else e_error "File hasnt been compiled "
-    fi
 
+        switcher1=0
+        while [[ $switcher1 < 1 ]]; do
+            read input
+            if [ $input = 'y' ]; then
+                OS="`uname`"
+                case $OS in
+                  'Linux')
+                    xterm -hold -e ~/Desktop/CLang/CompiledC/$nameOfCompiledFile
+                    ;;
+                  'Darwin')
+                    open -a Terminal ~/Desktop/CLang/CompiledC/$nameOfCompiledFile
+                    ;;
+                  *) ;;
+                esac
+                switcher1=1
+            else if [ $input = 'n' ]; then
+                switcher1=1
+            else switcher1=0
+            fi
+            fi
+        done
+
+    fi
 
 }
 
-###########################
-
-echo -e "\n"
-e_white "------------------------"
-e_white "| *Compile master 228* |"
-e_white "------------------------"
-cd ~/Desktop/CLang
-
-i=0
-while [[ $i < 1 ]]; do
-    ls | grep .c
+function mainmenu {
     e_white "------------------------"
+    i=0
+    while [[ $i < 1 ]]; do
+        ls | grep .c
+        e_white "------------------------"
+        e_white "Enter the name of c file you want to compile:"
 
-    e_white "Enter name of c file you want to compile:"
+        read cfileName
+        if [[ -e $cfileName ]]; then
 
-  read cfileName
-  if [[ -e $cfileName ]]; then
+            e_white "Еnter name of compiled file:"
+            read nameOfCompiledFile
+            run_file
+            ask_user
 
-    e_white "Еnter name of compiled file:"
-    read nameOfCompiledFile
-      if [[ -e ~/Desktop/CLang/CompiledC ]]; then
-        gcc -Wall -o $nameOfCompiledFile $cfileName
-            runFile $nameOfCompiledFile
-      else
-        mkdir ~/Desktop/CLang/CompiledC
-        gcc -Wall -o $nameOfCompiledFile $cfileName
-        #rm CompiledC/$nameOfCompiledFile
-        #mv ~/Desktop/$nameOfCompiledFile ~/Desktop/CompiledC/$nameOfCompiledFile
-        #mkdir ~/Desktop/CLang/CompiledC
-        runFile $nameOfCompiledFile
-      fi
+        else
+            echo -e "\n"
+            e_error "Error "
+            e_white "This file doesnt exist. Enter another namе of c file."
+        fi
+    done
 
-  else
-    echo -e "\n"
+}
+
+main() {
+    cd ~/Desktop/
     e_white "------------------------"
-    ls | grep .c
-    e_white "------------------------"
-    e_error "Error "
-    e_white "This file doesnt exist. Enter another namе of c file."
-  fi
+    e_white "| *Compile master 229* |"
 
-done
+    if [ ! -d "CLang/" ]; then
+        mkdir CLang
+        cd CLang/
+        mkdir CompiledC
+    else
+        cd CLang/
+        if [ ! -d "CompiledC/" ]; then
+            mkdir CompiledC
+        fi
+    fi
+
+
+    mainmenu
+}
+
+main
