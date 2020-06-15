@@ -2,11 +2,11 @@
 
 
 This is a bash script that helps to work with compilation in the C language.
-The script creates a folder on the desktop called CFiles, in which C files will be stored
-In the folder CFiles there is a folder CompiledC, where the compiled files are stored
+The script creates a folder on the desktop called C229 then CPPFiles and CFiles, in which C and CPP files will be stored
+In the folder CFiles there is a folder CompiledC, where the compiled files are stored and the same thing for CPPFiles and CompiledCPP
 
 The script will allow you to compile and change the name of the compiled files, recompile the files and make small changes using the vim code editor
-At the beginning, the script will display you C files in the CLang folder. Next, you will be asked to chose the file name and the name of the compiled file,
+At the beginning, the script will display you C and CPP files in the CLang folder. Next, you will be asked to chose the file name and the name of the compiled file,
 which upon successful compilation will be moved to the CompiledC folder. Then you can, following the instructions, open the compiled file or edit it.
 
 The script works with MACOS AND UBUNTU.
