@@ -3,7 +3,7 @@
 #** Bash script
 #**
 #**
-#** Authors: Andrej Shchapaniak(), Skuratovich Aliaksansr()
+#** Authors: Andrej Shchapaniak(), Miroslav Javorin()
 #**
 #**
 #**
@@ -87,7 +87,7 @@ function terminal_mac_linux_c() {
                 xterm -hold -e CompiledC/$nameOfCompiledFile
             ;;
             "edit" )
-                xterm -hold -e vim $cfileName
+                xterm -hold -e vim $filename
             ;;
             * )
                 e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
@@ -100,7 +100,7 @@ function terminal_mac_linux_c() {
                 open -a Terminal CompiledC/$nameOfCompiledFile
             ;;
             "edit" )
-                vi $cfileName
+                vim $filename
             ;;
             * )
                 e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
@@ -112,12 +112,12 @@ function terminal_mac_linux_c() {
 
 
 function compile_mv_rmOld_run_c() {
-    clang -Wall -o $nameOfCompiledFile $cfileName
+    clang -Wall -o $nameOfCompiledFile $filename
     rm CompiledC/$nameOfCompiledFile
     mv ~/Desktop/C229/CLang/$nameOfCompiledFile ~/Desktop/C229/CLang/CompiledC/$nameOfCompiledFile
     terminal_mac_linux_c compile
 }
-# asks user after run_file if user wants to recompile or change the files in vim and recomplile
+# asks user after run_file if user wants to recompile or the files in vim and recomplile
 
 
 
@@ -129,7 +129,7 @@ function ask_user_c() {
         echo
         e_white "1 Recompile and open file "
         echo
-        e_white "2 Change file and recompile "
+        e_white "2 Edit file and recompile "
         echo
         e_white "3 Change name"
         echo
@@ -153,7 +153,7 @@ function ask_user_c() {
 
         else if [[ $input -eq 0 ]]; then
             switcher=1
-            mainmenu_c
+            back
         fi
         fi
         fi
@@ -161,53 +161,9 @@ function ask_user_c() {
     done
 }
 
-function change_name_c()
-{
-
-    switcher=0
-    while [[ $switcher < 1 ]]; do
-        echo
-        e_white "1 Change name of C file"
-        echo
-        e_white "2 Change name of compiled C file"
-        echo
-        e_white "0 exit"
-        echo
-        read input
-
-        if [[ $input -eq 1 ]]; then
-            e_cyan "Enter the new name of file"
-            echo
-            read new_cfile_name
-            mv $cfileName $new_cfile_name
-
-            $cfileName=new_cfile_name # FIXME here is a bug
-
-
-        else if [[ $input -eq 2 ]]; then
-            e_cyan "Enter the new name of file"
-            echo
-            read new_name_of_compiled_cfile
-            mv CompiledC/$nameOfCompiledFile CompiledC/$new_name_of_compiled_cfile
-            echo
-            e_green "Name has been changed"
-            echo
-
-            nameOfCompiledFile=$new_name_of_compiled_cfile # FIXME here is a bug
-
-
-        else if [[ $input -eq 0 ]]; then
-            switcher=1
-            ask_user_c
-        fi
-        fi
-        fi
-    done
-
-}
 
 function run_file_c() {
-    clang -Wall -o $nameOfCompiledFile $cfileName
+    clang -Wall -o $nameOfCompiledFile $filename
 
     if [[ -e $nameOfCompiledFile ]]; then
         rm CompiledC/$nameOfCompiledFile
@@ -243,57 +199,7 @@ function run_file_c() {
 
 }
 
-function mainmenu_c() {
-#---------------------------------------------- heres an ISSUE condition if doesnot work properly
-    if [ -d "~/Desktop/C229/CLang/" ]; then
-        cd ~/Desktop/C229/CLang/
-        if [ ! -d "~/Desktop/C229/CLang/" ]; then
-            mkdir CompiledC
-        fi
 
-    else
-        mkdir ~/Desktop/C229/CLang
-        cd ~/Desktop/C229/CLang/
-        mkdir CompiledC
-
-    fi
-#----------------------------------------------
-
-    cd ~/Desktop/C229/CLang/
-
-
-    i=0
-    e_white "------------------------"
-    echo
-    ls | grep .c
-    echo
-    e_white "------------------------"
-    echo
-    e_cyan "Enter the name of c file you want to compile:"
-    echo
-
-
-    while [[ $i < 1 ]]; do
-
-        read cfileName
-        if [[ -e $cfileName ]]; then
-
-            e_cyan "Еnter name of compiled file:"
-            echo
-            read nameOfCompiledFile
-
-            run_file_c
-            ask_user_c
-
-        else
-            echo
-            e_error "Error "
-            e_white "This file doesnt exist. Enter another namе of c file."
-            echo
-        fi
-    done
-
-}
 
 # here are functions for cpp language
 
@@ -306,7 +212,7 @@ function terminal_mac_linux_cpp() {
                 xterm -hold -e CompiledCPP/$nameOfCompiledFile
             ;;
             "edit" )
-                xterm -hold -e vim $cfileName
+                xterm -hold -e vim $filename
             ;;
             * )
                 e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
@@ -319,7 +225,7 @@ function terminal_mac_linux_cpp() {
                 open -a Terminal CompiledCPP/$nameOfCompiledFile
             ;;
             "edit" )
-                vi $cfileName
+                vim $filename
             ;;
             * )
                 e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
@@ -331,7 +237,7 @@ function terminal_mac_linux_cpp() {
 
 
 function compile_mv_rmOld_run_cpp() {
-    clang++ -o $nameOfCompiledFile $cfileName
+    clang++ -o $nameOfCompiledFile $filename
     rm CompiledCPP/$nameOfCompiledFile
     mv ~/Desktop/C229/CPPLang/$nameOfCompiledFile ~/Desktop/C229/CPPLang/CompiledCPP/$nameOfCompiledFile
     terminal_mac_linux_cpp compile
@@ -373,13 +279,79 @@ function ask_user_cpp() {
         else if [[ $input -eq 0 ]]; then
             switcher=1
 
-            mainmenu_cpp
+            back
         fi
         fi
         fi
         fi
     done
 }
+
+
+function change_name_c()
+{
+
+    switcher=0
+    while [[ $switcher < 1 ]]; do
+        echo
+        e_white "1 Change name of C file"
+        echo
+        e_white "2 Change name of compiled C file"
+        echo
+        e_white "3 Change both"
+        echo
+        e_white "0 exit"
+        echo
+        read input
+
+        if [[ $input -eq 1 ]]; then
+            e_cyan "Enter the new name of file:"
+            echo
+            read new_file_name
+            mv $filename $new_file_name
+
+            filename=$new_file_name # FIXME here is a bug
+
+        else if [[ $input -eq 2 ]]; then
+            e_cyan "Enter the new name of file:"
+            echo
+            read new_name_of_compiled_file
+            mv CompiledC/$nameOfCompiledFile CompiledC/$new_name_of_compiled_file
+            echo
+            e_green "Name has been changed"
+            echo
+
+            nameOfCompiledFile=$new_name_of_compiled_file # FIXME here is a bug
+
+        else if [[ $input -eq 3 ]]; then
+            e_cyan "Enter the new filename with .c postfix:"
+            echo
+            read new_file_name
+            mv $filename $new_file_name
+            filename=$new_file_name
+
+
+            e_cyan "Enter the new filename of compiled CPP file:"
+            echo
+            read new_name_of_compiled_file
+            mv CompiledC/$nameOfCompiledFile CompiledC/$new_name_of_compiled_file
+            nameOfCompiledFile=$new_name_of_compiled_file
+
+            echo
+            e_green "Names have been changed"
+            echo
+
+        else if [[ $input -eq 0 ]]; then
+            switcher=1
+            ask_user_c
+        fi
+        fi
+        fi
+        fi
+    done
+
+}
+
 
 function change_name_cpp()
 {
@@ -389,33 +361,54 @@ function change_name_cpp()
         echo
         e_white "2 Change name of compiled CPP file"
         echo
+        e_white "3 Change both"
+        echo
         e_white "0 exit"
         echo
         read input
 
         if [[ $input -eq 1 ]]; then
-            e_cyan "Enter the new name of file"
+            e_cyan "Enter the new name of file:"
             echo
-            read new_cppfile_name
-            mv $cfileName $new_cppfile_name
+            read new_file_name
+            mv $filename $new_file_name
 
-            $cfileName=new_cppfile_name # FIXME here is a bug
+            filename=$new_file_name
 
 
         else if [[ $input -eq 2 ]]; then
-            e_cyan "Enter the new name of file"
+            e_cyan "Enter the new name of file:"
             echo
-            read new_name_of_compiled_cppfile
-            mv CompiledCPP/$nameOfCompiledFile CompiledCPP/$new_name_of_compiled_cppfile
+            read new_name_of_compiled_file
+            mv CompiledCPP/$nameOfCompiledFile CompiledCPP/$new_name_of_compiled_file
             echo
-            e_green "Name has been changed"
+            e_green "Name has been changed:"
             echo
-            nameOfCompiledFile=$new_name_of_compiled_cppfile # FIXME here is a bug
+            nameOfCompiledFile=$new_name_of_compiled_file
 
+
+        else if [[ $input -eq 3 ]]; then
+            e_cyan "Enter the new filename with .cpp postfix:"
+            echo
+            read new_file_name
+            mv $filename $new_file_name
+            filename=$new_file_name
+
+
+            e_cyan "Enter the new filename of compiled C file:"
+            echo
+            read new_name_of_compiled_file
+            mv CompiledCPP/$nameOfCompiledFile CompiledCPP/$new_name_of_compiled_file
+            nameOfCompiledFile=$new_name_of_compiled_file
+
+            echo
+            e_green "Names have been changed"
+            echo
 
         else if [[ $input -eq 0 ]]; then
             switcher=1
             ask_user_cpp
+        fi
         fi
         fi
         fi
@@ -424,7 +417,7 @@ function change_name_cpp()
 }
 
 function run_file_cpp() {
-    clang -Wall -o $nameOfCompiledFile $cfileName
+    clang++ -Wall -o $nameOfCompiledFile $filename
 
     if [[ -e $nameOfCompiledFile ]]; then
         rm CompiledCPP/$nameOfCompiledFile
@@ -460,21 +453,55 @@ function run_file_cpp() {
 
 }
 
+function mainmenu_c() {
+    if [ ! -d  "CLang/" ]; then # cd is C229
+        mkdir CLang
+        cd CLang/
+        mkdir CompiledC
+    else
+        cd CLang/
+    fi
+
+
+    i=0
+    e_white "------------------------"
+    echo
+    ls | grep .c
+    e_white "------------------------"
+    echo
+    e_cyan "Enter the name of c file you want to compile:"
+    echo
+
+
+    while [[ $i < 1 ]]; do
+        read filename
+
+        if [[ -e $filename ]]; then
+            e_cyan "Еnter name of compiled file:"
+            echo
+            read nameOfCompiledFile
+            run_file_c
+            ask_user_c
+        else
+            echo
+            e_error "Error "
+            e_white "This file doesnt exist. Enter another namе of c file."
+            echo
+        fi
+    done
+
+}
+
+
 function mainmenu_cpp() {
-#---------------------------------------------- heres an ISSUE. condition if doesnot work properly
-    if [ ! -d "~/Desktop/C229/CPPLang/" ]; then
-        mkdir ~/Desktop/C229/CPPLang
+    if [ ! -d  "CPPLang/" ]; then # cd is C229
+        mkdir CPPLang
         cd CPPLang/
         mkdir CompiledCPP
     else
-        cd ~Desktop/C229/CPPLang/
-        if [ ! -d "~/Desktop/C229/CompiledCPP/" ]; then
-            mkdir CompiledCPP
-        fi
+        cd CPPLang/
     fi
-#----------------------------------------------
 
-    cd CPPLang/
 
     i=0
     e_white "------------------------"
@@ -487,8 +514,8 @@ function mainmenu_cpp() {
     echo
 
     while [[ $i < 1 ]]; do
-        read cfileName
-        if [[ -e $cfileName ]]; then
+        read filename
+        if [[ -e $filename ]]; then
 
             e_cyan "Еnter name of compiled file:"
             read nameOfCompiledFile
@@ -507,13 +534,6 @@ function mainmenu_cpp() {
 ##################################
 
 function main() {
-    cd ~/Desktop/
-
-    if [ ! -d "~/Desktop/C229/" ]; then
-        mkdir C229
-    fi
-
-    cd C229/
 
     piska=1
     while [[ $piska < 5 ]]; do
@@ -543,6 +563,19 @@ function main() {
         piska=$(($piska+1))
 
     done
+    echo
+    back
+}
+
+function back()
+{
+    cd ~/Desktop/
+
+    if [ ! -d "C229/" ]; then
+        mkdir C229/
+    fi
+
+    cd C229/
     echo
     e_cyan "Choose language"
     echo
