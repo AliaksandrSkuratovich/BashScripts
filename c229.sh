@@ -7,7 +7,7 @@
 #**
 #######229###########################################
 
-# 4) add string autocompeting
+# 4) add string autocompliting
 
 e_normal()
 {
