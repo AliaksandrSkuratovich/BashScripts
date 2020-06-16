@@ -1,8 +1,15 @@
 #! /bin/bash
+###################################################
+#** Bash script
+#**
+#**
+#** Authors: Andrej Shchapaniak(), Skuratovich Aliaksansr()
+#**
+#**
+#**
+###################################################
 
-
-# 4) добавить возможность автозаполнения строки при вводе названия файла, который хотим скомпилировать
-#
+# 4) add string autocompeting
 
 e_normal()
 {
@@ -237,17 +244,23 @@ function run_file_c() {
 }
 
 function mainmenu_c() {
-
-    if [ ! -d "~/Desktop/C229/CLang/" ]; then
-        mkdir CLang
+#---------------------------------------------- heres an ISSUE condition if doesnot work properly
+    if [ -d "~/Desktop/C229/CLang/" ]; then
         cd ~/Desktop/C229/CLang/
-        mkdir CompiledC
-    else
-        cd CLang/
-        if [ ! -d "CompiledC/" ]; then
+        if [ ! -d "~/Desktop/C229/CLang/" ]; then
             mkdir CompiledC
         fi
+
+    else
+        mkdir ~/Desktop/C229/CLang
+        cd ~/Desktop/C229/CLang/
+        mkdir CompiledC
+
     fi
+#----------------------------------------------
+
+    cd ~/Desktop/C229/CLang/
+
 
     i=0
     e_white "------------------------"
@@ -282,10 +295,7 @@ function mainmenu_c() {
 
 }
 
-
-########3333333333333333333333333333333333333333333333333333333333
-
-
+# here are functions for cpp language
 
 function terminal_mac_linux_cpp() {
     OS="`uname`"
@@ -451,17 +461,21 @@ function run_file_cpp() {
 }
 
 function mainmenu_cpp() {
-
+#---------------------------------------------- heres an ISSUE. condition if doesnot work properly
     if [ ! -d "~/Desktop/C229/CPPLang/" ]; then
-        mkdir CPPLang
+        mkdir ~/Desktop/C229/CPPLang
         cd CPPLang/
         mkdir CompiledCPP
     else
         cd ~Desktop/C229/CPPLang/
-        if [ ! -d "CompiledCPP/" ]; then
+        if [ ! -d "~/Desktop/C229/CompiledCPP/" ]; then
             mkdir CompiledCPP
         fi
     fi
+#----------------------------------------------
+
+    cd CPPLang/
+
     i=0
     e_white "------------------------"
     echo
@@ -495,7 +509,7 @@ function mainmenu_cpp() {
 function main() {
     cd ~/Desktop/
 
-    if [ ! -d "C229/" ]; then
+    if [ ! -d "~/Desktop/C229/" ]; then
         mkdir C229
     fi
 
