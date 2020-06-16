@@ -1,6 +1,5 @@
 #! /bin/bash
 #** Bash script
-#** copyright
 #**
 #** Authors: Andrej Shchapaniak(), Miroslav Javorin()
 #**
