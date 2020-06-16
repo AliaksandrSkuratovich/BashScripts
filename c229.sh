@@ -124,7 +124,9 @@ function ask_user_c() {
         echo
         e_white "2 Change file and recompile "
         echo
-        e_white "3 Go to the main menu "
+        e_white "3 Change name"
+        echo
+        e_white "0 exit "
         echo
         read input
 
@@ -140,13 +142,61 @@ function ask_user_c() {
             compile_mv_rmOld_run_c compile
 
         else if [[ $input -eq 3 ]]; then
-            switcher=1
+            change_name_c
 
+        else if [[ $input -eq 0 ]]; then
+            switcher=1
             mainmenu_c
         fi
         fi
         fi
+        fi
     done
+}
+
+function change_name_c()
+{
+
+    switcher=0
+    while [[ $switcher < 1 ]]; do
+        echo
+        e_white "1 Change name of C file"
+        echo
+        e_white "2 Change name of compiled C file"
+        echo
+        e_white "0 exit"
+        echo
+        read input
+
+        if [[ $input -eq 1 ]]; then
+            e_cyan "Enter the new name of file"
+            echo
+            read new_cfile_name
+            mv $cfileName $new_cfile_name
+
+            $cfileName=new_cfile_name # FIXME here is a bug
+
+
+        else if [[ $input -eq 2 ]]; then
+            e_cyan "Enter the new name of file"
+            echo
+            read new_name_of_compiled_cfile
+            mv CompiledC/$nameOfCompiledFile CompiledC/$new_name_of_compiled_cfile
+            echo
+            e_green "Name has been changed"
+            echo
+
+            nameOfCompiledFile=$new_name_of_compiled_cfile # FIXME here is a bug
+
+
+        else if [[ $input -eq 0 ]]; then
+            switcher=1
+            ask_user_c
+        fi
+        fi
+        fi
+    done
+
 }
 
 function run_file_c() {
@@ -156,7 +206,9 @@ function run_file_c() {
         rm CompiledC/$nameOfCompiledFile
         mv ~/Desktop/C229/CLang/$nameOfCompiledFile ~/Desktop/C229/CLang/CompiledC/$nameOfCompiledFile
         e_cyan "Do you want to open the file?"
+        echo
         e_white "[y/n]"
+        echo
 
         switcher=0
         while [[ $switcher < 1 ]]; do
@@ -186,9 +238,9 @@ function run_file_c() {
 
 function mainmenu_c() {
 
-    if [ ! -d "CLang/" ]; then
+    if [ ! -d "~/Desktop/C229/CLang/" ]; then
         mkdir CLang
-        cd CLang/
+        cd ~/Desktop/C229/CLang/
         mkdir CompiledC
     else
         cd CLang/
@@ -287,7 +339,9 @@ function ask_user_cpp() {
         echo
         e_white "2 Change file and recompile "
         echo
-        e_white "3 Go to the main menu "
+        e_white "3 Change name"
+        echo
+        e_white "0 exit "
         echo
         read input
 
@@ -303,13 +357,60 @@ function ask_user_cpp() {
             compile_mv_rmOld_run_cpp compile
 
         else if [[ $input -eq 3 ]]; then
+            change_name_cpp
+
+
+        else if [[ $input -eq 0 ]]; then
             switcher=1
 
             mainmenu_cpp
         fi
         fi
         fi
+        fi
     done
+}
+
+function change_name_cpp()
+{
+    while [[ $switcher < 1 ]]; do
+        echo
+        e_white "1 Change name of CPP file"
+        echo
+        e_white "2 Change name of compiled CPP file"
+        echo
+        e_white "0 exit"
+        echo
+        read input
+
+        if [[ $input -eq 1 ]]; then
+            e_cyan "Enter the new name of file"
+            echo
+            read new_cppfile_name
+            mv $cfileName $new_cppfile_name
+
+            $cfileName=new_cppfile_name # FIXME here is a bug
+
+
+        else if [[ $input -eq 2 ]]; then
+            e_cyan "Enter the new name of file"
+            echo
+            read new_name_of_compiled_cppfile
+            mv CompiledCPP/$nameOfCompiledFile CompiledCPP/$new_name_of_compiled_cppfile
+            echo
+            e_green "Name has been changed"
+            echo
+            nameOfCompiledFile=$new_name_of_compiled_cppfile # FIXME here is a bug
+
+
+        else if [[ $input -eq 0 ]]; then
+            switcher=1
+            ask_user_cpp
+        fi
+        fi
+        fi
+    done
+
 }
 
 function run_file_cpp() {
@@ -319,7 +420,9 @@ function run_file_cpp() {
         rm CompiledCPP/$nameOfCompiledFile
         mv ~/Desktop/C229/CPPLang/$nameOfCompiledFile ~/Desktop/C229/CPPLang/CompiledCPP/$nameOfCompiledFile
         e_cyan "Do you want to open the file?"
+        echo
         e_white "[y/n]"
+        echo
 
         switcher=0
         while [[ $switcher < 1 ]]; do
@@ -349,12 +452,12 @@ function run_file_cpp() {
 
 function mainmenu_cpp() {
 
-    if [ ! -d "CPPLang/" ]; then
+    if [ ! -d "~/Desktop/C229/CPPLang/" ]; then
         mkdir CPPLang
         cd CPPLang/
         mkdir CompiledCPP
     else
-        cd CPPLang/
+        cd ~Desktop/C229/CPPLang/
         if [ ! -d "CompiledCPP/" ]; then
             mkdir CompiledCPP
         fi
@@ -387,16 +490,16 @@ function mainmenu_cpp() {
     done
 
 }
-
+##################################
 
 function main() {
+    cd ~/Desktop/
+
     if [ ! -d "C229/" ]; then
         mkdir C229
-        cd C229/
     fi
 
-
-    cd ~/Desktop/C229/
+    cd C229/
 
     piska=1
     while [[ $piska < 5 ]]; do
