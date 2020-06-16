@@ -1,14 +1,12 @@
 #! /bin/bash
-###################################################
-# copyright
 #** Bash script
-#**
+#** copyright
 #**
 #** Authors: Andrej Shchapaniak(), Miroslav Javorin()
 #**
 #**
 #**
-###################################################
+#######229###########################################
 
 # 4) add string autocompeting
 
