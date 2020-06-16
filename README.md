@@ -31,4 +31,4 @@ then you have write the changes.
 
 this command enables you to execute the script
 
-Grats. you are able able to execute the script using the command 'command'
+Grats. you are able able to execute the script using the command `command`
