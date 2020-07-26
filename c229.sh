@@ -1,14 +1,14 @@
 #! /bin/bash
-#** Bash script
-#**
-#** Authors: Andrej Shchapaniak(), Miroslav Javorin()
-#**
-#**
-#**
-#######229###########################################
 
-# 4) add string autocompliting
+#* Bash script
+#*
+#* Authors: Andrej Shchapaniak(), Miroslav Javorin()
+#*
 
+# bug: line 450 in main_menu  or something when type cd ~Desktop/C229/Clang sh ignores /C229/Clang and make Desktop cd
+
+#region colors
+# Set colors for for print messages
 e_normal()
 {
   NC='\033[0m'
@@ -50,8 +50,6 @@ e_yellow()
     e_normal
 }
 
-
-
 e_purple()
 {
     purple='\033[0;35m'
@@ -72,135 +70,11 @@ e_blue()
     printf "${blue}$1"
     e_normal
 }
+#endregion colors
 
 
-
-
-function terminal_mac_linux_c() {
-    OS="`uname`"
-    case $OS in
-      'Linux')
-        case $1 in
-            "compile" )
-                xterm -hold -e CompiledC/$nameOfCompiledFile
-            ;;
-            "edit" )
-                xterm -hold -e vim $filename
-            ;;
-            * )
-                e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
-        esac
-
-        ;;
-      'Darwin')
-        case $1 in
-            "compile" )
-                open -a Terminal CompiledC/$nameOfCompiledFile
-            ;;
-            "edit" )
-                vim $filename
-            ;;
-            * )
-                e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
-        esac
-        ;;
-      *) ;;
-    esac
-}
-
-
-function compile_mv_rmOld_run_c() {
-    clang -Wall -o $nameOfCompiledFile $filename
-    rm CompiledC/$nameOfCompiledFile
-    mv ~/Desktop/C229/CLang/$nameOfCompiledFile ~/Desktop/C229/CLang/CompiledC/$nameOfCompiledFile
-    terminal_mac_linux_c compile
-}
-# asks user after run_file if user wants to recompile or the files in vim and recomplile
-
-
-
-function ask_user_c() {
-    switcher=0
-    while [[ $switcher < 1 ]]; do
-        echo
-        e_cyan "What do you want to do next? "
-        echo
-        e_white "1 Recompile and open file "
-        echo
-        e_white "2 Edit file and recompile "
-        echo
-        e_white "3 Change name"
-        echo
-        e_white "0 exit "
-        echo
-        read input
-
-
-        if [[ $input -eq 1 ]]; then
-            compile_mv_rmOld_run_c
-
-        else if [[ $input -eq 2 ]]; then
-            terminal_mac_linux_c edit
-            e_cyan "Compiling starts after you enter anything... "
-            read anything
-
-            compile_mv_rmOld_run_c compile
-
-        else if [[ $input -eq 3 ]]; then
-            change_name_c
-
-        else if [[ $input -eq 0 ]]; then
-            switcher=1
-            back
-        fi
-        fi
-        fi
-        fi
-    done
-}
-
-
-function run_file_c() {
-    clang -Wall -o $nameOfCompiledFile $filename
-
-    if [[ -e $nameOfCompiledFile ]]; then
-        rm CompiledC/$nameOfCompiledFile
-        mv ~/Desktop/C229/CLang/$nameOfCompiledFile ~/Desktop/C229/CLang/CompiledC/$nameOfCompiledFile
-        e_cyan "Do you want to open the file?"
-        echo
-        e_white "[y/n]"
-        echo
-
-        switcher=0
-        while [[ $switcher < 1 ]]; do
-            read input
-            if [ $input = 'y' ]; then
-                OS="`uname`"
-                case $OS in
-                  'Linux')
-                    xterm -hold -e ~/Desktop/C229/CLang/CompiledC/$nameOfCompiledFile
-                    ;;
-                  'Darwin')
-                    open -a Terminal ~/Desktop/C229/CLang/CompiledC/$nameOfCompiledFile
-                    ;;
-                  *) ;;
-                esac
-                switcher=1
-            else if [ $input = 'n' ]; then
-                switcher=1
-            else switcher=0
-            fi
-            fi
-        done
-
-    fi
-
-}
-
-
-
-# here are functions for cpp language
-
+#region run_in_new_terminal_window
+# here are the functions for opening a terminal window with compiled program. It runs only if program has been succesfully compiled
 function terminal_mac_linux_cpp() {
     OS="`uname`"
     case $OS in
@@ -233,15 +107,176 @@ function terminal_mac_linux_cpp() {
     esac
 }
 
+function terminal_mac_linux_c() {
+    OS="`uname`"
+    case $OS in
+      'Linux')
+        case $1 in
+            "compile" )
+                xterm -hold -e CompiledC/$nameOfCompiledFile
+            ;;
+            "edit" )
+                xterm -hold -e vim $filename
+            ;;
+            * )
+                e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
+        esac
 
-function compile_mv_rmOld_run_cpp() {
-    clang++ -o $nameOfCompiledFile $filename
+        ;;
+      'Darwin')
+        case $1 in
+            "compile" )
+                open -a Terminal CompiledC/$nameOfCompiledFile
+            ;;
+            "edit" )
+                vim $filename
+            ;;
+            * )
+                e_error "БЛЯ ПИЗДЕЦ АНДРЮХА НЕ РАБОТАЕТ"
+        esac
+        ;;
+      *) ;;
+    esac
+}
+#endregion run_in_new_terminal_window
+
+#region  compile_mv_rmOld
+function compile_mv_rmOld_run_cpp(){
+    #compiles file and moves it to directory with compiled files
+    clang++ -o $nameOfCompiledFile $filename # cd is the directory you etered above in terminal
     rm CompiledCPP/$nameOfCompiledFile
-    mv ~/Desktop/C229/CPPLang/$nameOfCompiledFile ~/Desktop/C229/CPPLang/CompiledCPP/$nameOfCompiledFile
+    mv $nameOfCompiledFile CompiledCPP/$nameOfCompiledFile
     terminal_mac_linux_cpp compile
 }
-# asks user after run_file if user wants to recompile or change the files in vim and recomplile
 
+function compile_mv_rmOld_run_c() {
+    clang -Wall -o  $nameOfCompiledFile $filename
+    rm CompiledC/$nameOfCompiledFile
+    mv $nameOfCompiledFile CompiledC/$nameOfCompiledFile
+    terminal_mac_linux_c compile
+}
+#endregion compile_mv_rmOld
+
+#region run_file
+function run_file_c() {
+    clang -Wall -o  $nameOfCompiledFile $filename
+
+    if [[ -e $nameOfCompiledFile ]]; then
+        rm CompiledC/$nameOfCompiledFile
+        mv $nameOfCompiledFile CompiledC/$nameOfCompiledFile
+        e_cyan "Do you want to open the file?"
+        echo
+        e_white "[y/n]"
+        echo
+
+        switcher=0
+        while [[ $switcher < 1 ]]; do
+            read input
+            if [ $input = 'y' ]; then
+                OS="`uname`"
+                case $OS in
+                  'Linux')
+                    xterm -hold -e CompiledC/$nameOfCompiledFile
+                    ;;
+                  'Darwin')
+                    open -a Terminal CompiledC/$nameOfCompiledFile
+                    ;;
+                  *) ;;
+                esac
+                switcher=1
+            else if [ $input = 'n' ]; then
+                switcher=1
+            else switcher=0
+            fi
+            fi
+        done
+    fi
+}
+
+function run_file_cpp() {
+    clang++ -Wall -o  $nameOfCompiledFile $filename
+
+    if [[ -e $nameOfCompiledFile ]]; then
+        rm CompiledCPP/$nameOfCompiledFile
+        #  FIXME the line above. Enter the full path instead
+        mv $nameOfCompiledFile CompiledCPP/$nameOfCompiledFile
+        e_cyan "Do you want to open the file?"
+        echo
+        e_white "[y/n]"
+        echo
+
+        switcher=0
+        while [[ $switcher < 1 ]]; do
+            read input
+            if [ $input = 'y' ]; then
+                OS="`uname`"
+                # FIXME here. Also write the full path($path_to_directory) below if something doest work
+                case $OS in
+                  'Linux')
+                    xterm -hold -e CompiledCPP/$nameOfCompiledFile
+                    ;;
+                  'Darwin')
+                    open -a Terminal CompiledCPP/$nameOfCompiledFile
+                    ;;
+                  *) ;;
+                esac
+                switcher=1
+            else if [ $input = 'n' ]; then
+                switcher=1
+            else switcher=0
+            fi
+            fi
+        done
+
+    fi
+
+}
+# endregion run_file
+
+
+#region ask_user
+# asks user after run_file if user wants to recompile or the files in vim and recomplile
+function ask_user_c() {
+    switcher=0
+    while [[ $switcher < 1 ]]; do
+        echo
+        e_cyan "What do you want to do next? "
+        echo
+        e_white "1 Recompile and open file "
+        echo
+        e_white "2 Edit file and recompile "
+        echo
+        e_white "3 Change name"
+        echo
+        e_white "0 exit "
+        echo
+        read input
+
+
+        if [[ $input -eq 1 ]]; then
+            compile_mv_rmOld_run_c
+
+        else if [[ $input -eq 2 ]]; then
+            terminal_mac_linux_c edit
+            # FIXME uncomment if something doesn work properly
+
+            # e_cyan "Compiling starts after you enter anything... "
+            # read anything
+
+            compile_mv_rmOld_run_c compile
+
+        else if [[ $input -eq 3 ]]; then
+            change_name_c
+
+        else if [[ $input -eq 0 ]]; then
+            switcher=1
+            back
+        fi
+        fi
+        fi
+        fi
+    done
+}
 
 function ask_user_cpp() {
     switcher=0
@@ -284,11 +319,12 @@ function ask_user_cpp() {
         fi
     done
 }
+#endregion ask_user
 
 
+#region change_name
 function change_name_c()
 {
-
     switcher=0
     while [[ $switcher < 1 ]]; do
         echo
@@ -319,7 +355,7 @@ function change_name_c()
             e_green "Name has been changed"
             echo
 
-            nameOfCompiledFile=$new_name_of_compiled_file # FIXME here is a bug
+            nameOfCompiledFile=$new_name_of_compiled_file
 
         else if [[ $input -eq 3 ]]; then
             e_cyan "Enter the new filename with .c postfix:"
@@ -349,7 +385,6 @@ function change_name_c()
     done
 
 }
-
 
 function change_name_cpp()
 {
@@ -411,60 +446,32 @@ function change_name_cpp()
         fi
         fi
     done
-
 }
+#endregion change_name
 
-function run_file_cpp() {
-    clang++ -Wall -o $nameOfCompiledFile $filename
-
-    if [[ -e $nameOfCompiledFile ]]; then
-        rm CompiledCPP/$nameOfCompiledFile
-        mv ~/Desktop/C229/CPPLang/$nameOfCompiledFile ~/Desktop/C229/CPPLang/CompiledCPP/$nameOfCompiledFile
-        e_cyan "Do you want to open the file?"
-        echo
-        e_white "[y/n]"
-        echo
-
-        switcher=0
-        while [[ $switcher < 1 ]]; do
-            read input
-            if [ $input = 'y' ]; then
-                OS="`uname`"
-                case $OS in
-                  'Linux')
-                    xterm -hold -e ~/Desktop/C229/CPPLang/CompiledCPP/$nameOfCompiledFile
-                    ;;
-                  'Darwin')
-                    open -a Terminal ~/Desktop/C229/CPPLang/CompiledCPP/$nameOfCompiledFile
-                    ;;
-                  *) ;;
-                esac
-                switcher=1
-            else if [ $input = 'n' ]; then
-                switcher=1
-            else switcher=0
-            fi
-            fi
-        done
-
-    fi
-
-}
-
+#region mainmenu
 function mainmenu_c() {
-    if [ ! -d  "CLang/" ]; then # cd is C229
-        mkdir CLang
-        cd CLang/
+
+    echo
+    e_cyan "Type the path to the directory you will work in"
+    echo
+    read path_to_directory
+
+    if [ ! -d  $path_to_directory ]; then
+        mkdir $path_to_directory
+        cd $path_to_directory
+        echo "Debug"
         mkdir CompiledC
     else
-        cd CLang/
+        cd $path_to_directory
     fi
 
+    e_white "$path_to_directory"
 
     i=0
     e_white "------------------------"
     echo
-    ls | grep .c
+    ls -C -w | grep .c
     e_white "------------------------"
     echo
     e_cyan "Enter the name of c file you want to compile:"
@@ -487,24 +494,29 @@ function mainmenu_c() {
             echo
         fi
     done
-
 }
 
-
 function mainmenu_cpp() {
-    if [ ! -d  "CPPLang/" ]; then # cd is C229
-        mkdir CPPLang
-        cd CPPLang/
+    echo
+    e_cyan "Type the path to the directory you will work in"
+    echo
+    read path_to_directory
+
+    if [ ! -d  $path_to_directory ]; then # cd is C229
+        mkdir $path_to_directory
+
+        cd $path_to_directory
         mkdir CompiledCPP
     else
-        cd CPPLang/
+        cd $path_to_directory
     fi
-
 
     i=0
     e_white "------------------------"
     echo
-    ls | grep .cpp
+    cd $path_to_directory
+
+    ls -C -w | grep .cpp
     echo
     e_white "------------------------"
     echo
@@ -529,8 +541,9 @@ function mainmenu_cpp() {
     done
 
 }
-##################################
+#endregion main_menu
 
+#region main
 function main() {
 
     piska=1
@@ -564,16 +577,13 @@ function main() {
     echo
     back
 }
+#endregion main
 
+#region back
 function back()
 {
-    cd ~/Desktop/
+    #cd ~/Desktop/
 
-    if [ ! -d "C229/" ]; then
-        mkdir C229/
-    fi
-
-    cd C229/
     echo
     e_cyan "Choose language"
     echo
@@ -596,6 +606,7 @@ function back()
         fi
     done
 }
+#endregion back
 
-####################################################
+
 main
