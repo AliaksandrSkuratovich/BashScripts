@@ -449,6 +449,8 @@ function change_name_cpp()
 }
 #endregion change_name
 
+
+
 #region mainmenu
 function mainmenu_c() {
 
@@ -456,6 +458,7 @@ function mainmenu_c() {
     e_cyan "Type the path to the directory you will work in"
     echo
     read path_to_directory
+    cd
 
     if [ ! -d  $path_to_directory ]; then
         mkdir $path_to_directory
@@ -464,9 +467,15 @@ function mainmenu_c() {
         mkdir CompiledC
     else
         cd $path_to_directory
+        if [ ! -d  CompiledC/ ]; then
+            mkdir CompiledC/
+        fi
     fi
 
-    e_white "$path_to_directory"
+    #cd $path_to_directory
+
+
+    echo
 
     i=0
     e_white "------------------------"
