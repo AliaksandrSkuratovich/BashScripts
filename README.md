@@ -13,22 +13,22 @@ The script works with MACOS AND UBUNTU.
 IMPORTANT when working with ubuntu you must have xterm installed, otherwise the script will not work
 
 To install and run the script, download the file or repository, then execute the commands in the terminal
-    `cd`
+    ```cd```
 
-    `sudo apt install xterm`
+   ```sudo apt install xterm```
 
-    `sudo apt install vim`
+   ```sudo apt install vim```
 
-    `vim .bash_profile`
+   ```vim .bash_profile```
 
 you will open the vim code editor, in which you need to write
 
-    `alias command="Path/to/./c229.sh"`
+   ```alias command="Path/to/./c229.sh"```
 
 then you have write the changes.
 
-    `chmod + x "Path / to /./ c229.sh"`
+   ```chmod + x "Path / to /./ c229.sh"```
 
 this command enables you to execute the script
 
-Grats. you are able able to execute the script using the command `command`
+Grats. you are able able to execute the script using the command ```command```
